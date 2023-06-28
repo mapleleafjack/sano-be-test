@@ -1,0 +1,8 @@
+/venv
+/secrets
+/.tmontmp
+.testmondata
+.coverage
+.idea/
+.vscode/
+__pycache__
