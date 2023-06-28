@@ -20,3 +20,28 @@ def test_user_gateway_adds_user_to_database(create_mock, gateway_under_test):
         })
     
     assert response == {"id": "12345"}
+
+
+@mock.patch.object(User, "select")
+def test_user_gateway_gets_all_users_from_database(select_mock, gateway_under_test):
+    select_mock.return_value = [
+        User(
+            id="12345", 
+            name="John Doe", 
+            phone_number="123456789", 
+            email="john.doe@gmail.com",
+            address={"some": "address"}
+        ),
+        User(
+            id="123213123", 
+            name="Jovanni Doe", 
+            phone_number="1321321321", 
+            email="john.doe1@gmail.com",
+            address={"some": "address"}
+        )
+    ]
+
+    response = gateway_under_test.get_all_users()
+    
+    assert len(response) == 2                                 
+                                     
