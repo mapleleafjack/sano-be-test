@@ -42,6 +42,24 @@ def test_user_gateway_gets_all_users_from_database(select_mock, gateway_under_te
     ]
 
     response = gateway_under_test.get_all_users()
-    
+
     assert len(response) == 2                                 
                                      
+@mock.patch.object(User, "get_or_none")
+def test_user_gateway_gets_user_by_id_from_database(get_or_none_mock, gateway_under_test):
+    get_or_none_mock.return_value = User(
+        id="12345", 
+        name="John Doe", 
+        phone_number="123456789", 
+        email="john.doe@gmail.com",
+        address={"some": "address"}
+    )
+
+    response = gateway_under_test.get_user_by_id("12345")
+
+    assert response.id == "12345"
+    assert response.name == "John Doe"
+    assert response.phone_number == "123456789"
+    assert response.email == "john.doe@gmail.com"
+    assert response.address == {"some": "address"}
+    

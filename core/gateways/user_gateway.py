@@ -12,3 +12,9 @@ class UserGateway():
         all_users = User.select()
         data = UserSchema().dump(all_users, many=True)
         return data
+    
+    def get_user_by_id(self, id):
+        user = User.get_or_none(id=id)
+        if user is None:
+            return None
+        return user
