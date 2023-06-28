@@ -16,14 +16,11 @@ class SMSNotificationServiceGateway:
         return self._send_sms(user, message)
     
     def _send_sms(self, user, message):
-        headers = {
+        response = requests.post(self.host, headers={
             "Authorization": f"Bearer {self.bearer}"
-        }
-
-        json = {
+        }, json={
             "to": user.phone_number,
             "message": message
-        }
-        response = requests.post(self.host, headers=headers, json=json)
+        })
 
         return response

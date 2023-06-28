@@ -20,8 +20,7 @@ def test_notification_service_returns_error_when_phone_number_not_provided(gatew
     }
 
 @mock.patch.object(requests, "post")
-def test_notification_service_calls_send_sms_when_type_is_sms(mock_post, gateway_under_test):
+def test_notification_service_calls_post_function(mock_post, gateway_under_test):
     user = User(phone_number="123456789")
     gateway_under_test.notify(user, "message to send")
     mock_post.assert_called_once()
-
