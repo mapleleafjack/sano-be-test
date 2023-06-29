@@ -23,22 +23,20 @@ def test_order_gateway_calls_create_on_dna_kit_order(mock_create,gateway_under_t
     gateway_under_test.add_order(user=user, sequencing_type=sequencing_type, shipping_info=shipping_info)
     mock_create.assert_called_once_with(user=user, sequencing_type=sequencing_type, shipping_info=shipping_info)
 
-@mock.patch("core.gateways.order_gateway.DNAKitOrder.get_or_none")
-def test_order_gateway_returns_order_data(mock_select, gateway_under_test):
-    user_id = uuid.uuid4()
-    order = DNAKitOrder(id=uuid.uuid4(), user_id=user_id)
 
-    mock_select.return_value = order
+def test_order_gateway_get_order_by_user_id_returns_null_when_order_not_found(gateway_under_test):
+    user_id = uuid.uuid4()
 
     response = gateway_under_test.get_order_by_user_id(user_id)
 
-    assert response.id == order.id
+    assert response == []
 
-@mock.patch("core.gateways.order_gateway.DNAKitOrder.get_or_none")
-def test_order_gateway_get_order_by_user_id_returns_null_when_order_not_found(mock_select, gateway_under_test):
+@mock.patch.object(OrderGateway, "_get_data_form_db")
+def test_order_gateway_returns_order_data(_get_data_form_db, gateway_under_test):
+    order = DNAKitOrder(id=uuid.uuid4(), user=User(id=uuid.uuid4()))
+    _get_data_form_db.return_value = [order]
     user_id = uuid.uuid4()
-    mock_select.return_value = None
 
     response = gateway_under_test.get_order_by_user_id(user_id)
 
-    assert response == None
+    assert response[0]["id"] == str(order.id)

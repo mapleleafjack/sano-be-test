@@ -7,3 +7,10 @@ class UserSchema(Schema):
     phone_number = fields.Str()
     name = fields.Str()
     created_at = fields.DateTime()
+
+class DNAKitOrderSchema(Schema):
+    id = fields.Str()
+    sequencing_type = fields.Str()
+    user = fields.Nested(UserSchema)
+    shipping_info = fields.Dict()
+    created_at = fields.DateTime()

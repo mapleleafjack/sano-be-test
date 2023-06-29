@@ -6,9 +6,14 @@ import pytest
 def add_user_gateway_mock():
     return MagicMock()
 
+
 @pytest.fixture
-def usecase_under_test(add_user_gateway_mock):
-    return GetAllUsersUsecase(add_user_gateway_mock)
+def order_gateway_mock():
+    return MagicMock()
+
+@pytest.fixture
+def usecase_under_test(add_user_gateway_mock, order_gateway_mock):
+    return GetAllUsersUsecase(add_user_gateway_mock, order_gateway_mock)
 
 
 def test_get_all_users_usecase_calls_gateway(usecase_under_test, add_user_gateway_mock):

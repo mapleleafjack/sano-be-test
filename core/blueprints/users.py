@@ -1,16 +1,15 @@
+from core.gateways.order_gateway import OrderGateway
 from core.gateways.user_gateway import UserGateway
 from core.use_cases.add_user_usecase import AddUserUsecase
 from core.use_cases.get_all_users_usecase import GetAllUsersUsecase
 from flask import Blueprint, jsonify, request
-from core.models import User
-from core.schemas import UserSchema
 
 users_api = Blueprint("users_api", __name__)
 
 
 @users_api.route("/users", methods=["GET"])
 def get_all_users():
-    get_all_users_usecase = GetAllUsersUsecase(user_gateway=UserGateway())
+    get_all_users_usecase = GetAllUsersUsecase(user_gateway=UserGateway(), order_gateway=OrderGateway())
     data = get_all_users_usecase()
 
     return jsonify({"data": data, "count": len(data)})
