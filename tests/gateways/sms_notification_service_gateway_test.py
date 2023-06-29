@@ -24,3 +24,23 @@ def test_notification_service_calls_post_function(mock_post, gateway_under_test)
     user = User(phone_number="123456789")
     gateway_under_test.notify(user, "message to send")
     mock_post.assert_called_once()
+
+
+@mock.patch.object(requests, "post")
+def test_sms_returns_error_when_sms_not_sent(mock_post, gateway_under_test):
+    mock_post.return_value.status_code = 200
+    mock_post.return_value.json.return_value = {
+        "status": "error"
+    }
+    user = User(phone_number="123456789")
+    assert gateway_under_test.notify(user, "message to send") == {
+        "errors": ["SMS_NOT_SENT"]
+    }
+
+@mock.patch.object(requests, "post")
+def test_sms_returns_error_when_server_response_not_200(mock_post, gateway_under_test):
+    mock_post.return_value.status_code = 500
+    user = User(phone_number="123456789")
+    assert gateway_under_test.notify(user, "message to send") == {
+        "errors": ["SMS_NOT_SENT"]
+    }

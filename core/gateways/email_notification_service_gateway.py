@@ -2,23 +2,25 @@ import json
 import requests
 
 
-class SMSNotificationServiceGateway:
+class EmailNotificationServiceGateway():
     def __init__(self):
-        self.host = "https://dev.sanogenetics.com/dev/home-test/sms-delivery-service"
-        self.bearer = "o8deGqg2vTGYXtvIsA05zOW8ywAPBQuB"
+        self.host = "https://dev.sanogenetics.com/dev/home-test/email-delivery-service"
+        self.bearer = "7lPIazekwQu7Raz7FqBQmsLvlH29IDwG"
 
     def notify(self, user, message):
         if not user or not message:
             return {"errors": ["NOT_PROVIDED"]}
         
-        if not user.phone_number:
-            return {"errors": ["PHONE_NUMBER_NOT_PROVIDED"]}
+        if not user.email:
+            return {"errors": ["EMAIL_NOT_PROVIDED"]}
         
-        return self._send_sms(user, message)
+        response = self._send_email(user, message)
+        
+        return response
     
-    def _send_sms(self, user, message):
+    def _send_email(self, user, message):
         request_object = {
-            "recipient": user.phone_number,
+            "recipient": user.email,
             "message": message
         }
 
@@ -26,9 +28,9 @@ class SMSNotificationServiceGateway:
             "Authorization": f"Bearer {self.bearer}",
             'Content-Type': 'application/json'
         }, data=json.dumps(request_object))
-
+    
         if response.status_code == 200:
             if response.json().get("status") == "success":
                 return response.json().get("text")
 
-        return {"errors": ["SMS_NOT_SENT"]}
+        return {"errors": ["EMAIL_NOT_SENT"]}
