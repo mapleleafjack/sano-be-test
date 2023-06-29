@@ -7,6 +7,12 @@ import pytest
 def gateway_under_test():
     return UserGateway()
 
+def test_user_gateway_returns_error_when_data_not_provided(gateway_under_test):
+    response = gateway_under_test.add_user(name=None, phone_number=None, email=None, address=None)
+    assert response == {
+        "errors": ["NOT_PROVIDED"]
+    }
+    
 
 @mock.patch.object(User, "create")
 def test_user_gateway_adds_user_to_database(create_mock, gateway_under_test):
@@ -43,7 +49,13 @@ def test_user_gateway_gets_all_users_from_database(select_mock, gateway_under_te
 
     response = gateway_under_test.get_all_users()
 
-    assert len(response) == 2                                 
+    assert len(response) == 2        
+
+def test_user_gateway_get_by_id_returns_error_when_id_not_provided(gateway_under_test):
+    response = gateway_under_test.get_user_by_id(id=None)
+    assert response == {
+        "errors": ["NOT_PROVIDED"]
+    }                         
                                      
 @mock.patch.object(User, "get_or_none")
 def test_user_gateway_gets_user_by_id_from_database(get_or_none_mock, gateway_under_test):
