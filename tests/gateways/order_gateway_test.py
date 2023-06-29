@@ -15,10 +15,30 @@ def test_order_gateway_returns_error_when_user_id_not_provided(gateway_under_tes
     }
 
 @mock.patch.object(DNAKitOrder, "create")
-def test_order_gateway_adds_order_to_database(create_mock, gateway_under_test):
-    order_id = uuid.uuid4()
-    create_mock.return_value = DNAKitOrder(id=order_id)
+def test_order_gateway_calls_create_on_dna_kit_order(mock_create,gateway_under_test):
+    user = User()
+    sequencing_type = "whole-exome-sequencing"
+    shipping_info = {"shipping": "info"}
 
-    response = gateway_under_test.add_order(user=User(), sequencing_type="whole-exome-sequencing", shipping_info={"shipping": "info"})
-    
-    assert response == {"id": order_id}
+    gateway_under_test.add_order(user=user, sequencing_type=sequencing_type, shipping_info=shipping_info)
+    mock_create.assert_called_once_with(user=user, sequencing_type=sequencing_type, shipping_info=shipping_info)
+
+@mock.patch("core.gateways.order_gateway.DNAKitOrder.get_or_none")
+def test_order_gateway_returns_order_data(mock_select, gateway_under_test):
+    user_id = uuid.uuid4()
+    order = DNAKitOrder(id=uuid.uuid4(), user_id=user_id)
+
+    mock_select.return_value = order
+
+    response = gateway_under_test.get_order_by_user_id(user_id)
+
+    assert response.id == order.id
+
+@mock.patch("core.gateways.order_gateway.DNAKitOrder.get_or_none")
+def test_order_gateway_get_order_by_user_id_returns_null_when_order_not_found(mock_select, gateway_under_test):
+    user_id = uuid.uuid4()
+    mock_select.return_value = None
+
+    response = gateway_under_test.get_order_by_user_id(user_id)
+
+    assert response == None

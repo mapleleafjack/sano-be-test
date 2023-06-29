@@ -14,13 +14,11 @@ class UserGateway():
     def get_all_users(self):
         all_users = User.select()
         data = UserSchema().dump(all_users, many=True)
+        
         return data
     
     def get_by_id(self, id):
         if id is None:
             return {"errors": ["NOT_PROVIDED"]}
 
-        user = User.get_or_none(id=id)
-        if user is None:
-            return None
-        return user
+        return User.get_or_none(id=id)

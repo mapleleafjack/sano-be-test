@@ -9,3 +9,10 @@ class OrderGateway():
         order = DNAKitOrder.create(user=user, sequencing_type=sequencing_type, shipping_info=shipping_info)
 
         return {"id": order.id}
+    
+    def get_order_by_user_id(self, user_id):
+        if user_id is None:
+            return {"errors": ["NOT_PROVIDED"]}
+
+        return DNAKitOrder.get_or_none(user_id=user_id)
+        
