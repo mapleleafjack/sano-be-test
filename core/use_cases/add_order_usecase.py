@@ -8,9 +8,12 @@ class AddOrderUsecase():
             return {"errors": ["NOT_PROVIDED"]}
         
         user = self.user_gateway.get_by_id(user_id)
-
         if not user:
             return {"errors": ["USER_NOT_FOUND"]}
+        
+        add_order_response = self.order_gateway.add_order(user=user, sequencing_type=sequencing_type, shipping_info=shipping_info)
 
-        return self.order_gateway.add_order(user, sequencing_type, shipping_info)
-    
+        if "errors" in add_order_response:
+            return add_order_response
+
+        return {"id": add_order_response["id"]}
