@@ -1,6 +1,11 @@
+from core.models import DNAKitOrder
+
+
 class OrderGateway():
-    def add_order(self, user_id, sequencing_type, shipping_info):
-        if user_id is None or sequencing_type is None or shipping_info is None:
+    def add_order(self, user, sequencing_type, shipping_info):
+        if user is None or sequencing_type is None or shipping_info is None:
             return {"errors": ["NOT_PROVIDED"]}
 
-        return {"id": "12345"}
+        order = DNAKitOrder.create(user=user, sequencing_type=sequencing_type, shipping_info=shipping_info)
+
+        return {"id": order.id}

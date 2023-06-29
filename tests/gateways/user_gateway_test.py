@@ -52,7 +52,7 @@ def test_user_gateway_gets_all_users_from_database(select_mock, gateway_under_te
     assert len(response) == 2        
 
 def test_user_gateway_get_by_id_returns_error_when_id_not_provided(gateway_under_test):
-    response = gateway_under_test.get_user_by_id(id=None)
+    response = gateway_under_test.get_by_id(id=None)
     assert response == {
         "errors": ["NOT_PROVIDED"]
     }                         
@@ -67,7 +67,7 @@ def test_user_gateway_gets_user_by_id_from_database(get_or_none_mock, gateway_un
         address={"some": "address"}
     )
 
-    response = gateway_under_test.get_user_by_id("12345")
+    response = gateway_under_test.get_by_id("12345")
 
     assert response.id == "12345"
     assert response.name == "John Doe"
