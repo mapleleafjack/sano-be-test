@@ -28,5 +28,8 @@ def add_user():
         email=email,
         address=address
     )
+
+    if isinstance(response, dict) and "errors" in response:
+        return jsonify(response)
     
-    return response
+    return jsonify(response.id)

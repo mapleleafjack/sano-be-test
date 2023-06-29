@@ -25,7 +25,7 @@ def test_user_gateway_adds_user_to_database(create_mock, gateway_under_test):
             "postal_code": "10001",
         })
     
-    assert response == {"id": "12345"}
+    assert response.id == "12345"
 
 
 @mock.patch.object(User, "select")

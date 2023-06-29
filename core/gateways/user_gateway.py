@@ -9,7 +9,7 @@ class UserGateway():
             return {"errors": ["NOT_PROVIDED"]}
 
         user = User.create(name=name, phone_number=phone_number, email=email, address=address)
-        return {"id": user.id}
+        return user
     
     def get_all_users(self):
         all_users = User.select()

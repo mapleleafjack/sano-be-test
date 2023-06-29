@@ -1,4 +1,6 @@
 from unittest import mock
+import uuid
+from core.models import User
 from core.use_cases.add_user_usecase import AddUserUsecase
 
 
@@ -24,7 +26,7 @@ class TestUsers:
         
     @mock.patch.object(AddUserUsecase, "add_user")
     def test_post_user_calls_usecase_with_correct_params(self, add_user, test_client):
-        add_user.return_value = {"id": 1}
+        add_user.return_value = User(id=uuid.uuid4())
 
         response = test_client.post("/users", json={
             "phone_number": "123456789",
@@ -33,6 +35,8 @@ class TestUsers:
                 "street": "123 Main Street",
             }
         })
+
+        print(response.json)
 
         assert response.status_code == 200
         add_user.assert_called_once_with(name=None, phone_number="123456789", email="test.testington@gmail.com", address={
@@ -41,7 +45,7 @@ class TestUsers:
                    
     @mock.patch.object(AddUserUsecase, "add_user")
     def test_post_user_returns_id_of_new_user(self, add_user, test_client):
-        add_user.return_value = {"id": 1}
+        add_user.return_value = User(id=1)
 
         response = test_client.post("/users", json={
             "phone_number": "123456789",
@@ -52,5 +56,5 @@ class TestUsers:
         })
 
         assert response.status_code == 200
-        assert response.json == {"id": 1}
+        assert response.json == 1
                          
