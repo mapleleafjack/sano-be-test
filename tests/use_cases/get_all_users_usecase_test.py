@@ -27,7 +27,7 @@ def test_get_all_users_usecase_calls_gateway(usecase_under_test, user_gateway):
     user_gateway.get_all_users.assert_called_once()
 
 
-def test_get_all_users_api_returns_list_of_users_with_order_information(
+def test_get_all_users_usecase_returns_list_of_users_with_order_information(
     usecase_under_test, user_gateway, order_gateway
 ):
     user_id = uuid.uuid4()
