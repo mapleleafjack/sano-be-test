@@ -9,7 +9,7 @@ class NotifyUserUsecase:
         if not user or not sequencing_type:
             return {"errors": ["NOT_PROVIDED"]}
 
-        if sequencing_type == "dna-whole-exome-sequencing":
+        if sequencing_type == "whole-exome-sequencing":
             return self.sms_notification_service_gateway.notify(
                 user=user, message=f"Your order #{order_id} has been placed"
             )
