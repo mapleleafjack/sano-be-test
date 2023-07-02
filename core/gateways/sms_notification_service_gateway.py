@@ -10,22 +10,23 @@ class SMSNotificationServiceGateway:
     def notify(self, user, message):
         if not user or not message:
             return {"errors": ["NOT_PROVIDED"]}
-        
+
         if not user.phone_number:
             return {"errors": ["PHONE_NUMBER_NOT_PROVIDED"]}
-        
-        return self._send_sms(user, message)
-    
-    def _send_sms(self, user, message):
-        request_object = {
-            "recipient": user.phone_number,
-            "message": message
-        }
 
-        response = requests.post(self.host, headers={
-            "Authorization": f"Bearer {self.bearer}",
-            'Content-Type': 'application/json'
-        }, data=json.dumps(request_object))
+        return self._send_sms(user, message)
+
+    def _send_sms(self, user, message):
+        request_object = {"recipient": user.phone_number, "message": message}
+
+        response = requests.post(
+            self.host,
+            headers={
+                "Authorization": f"Bearer {self.bearer}",
+                "Content-Type": "application/json",
+            },
+            data=json.dumps(request_object),
+        )
 
         if response.status_code == 200:
             if response.json().get("status") == "success":

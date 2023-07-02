@@ -9,7 +9,9 @@ users_api = Blueprint("users_api", __name__)
 
 @users_api.route("/users", methods=["GET"])
 def get_all_users():
-    get_all_users_usecase = GetAllUsersUsecase(user_gateway=UserGateway(), order_gateway=OrderGateway())
+    get_all_users_usecase = GetAllUsersUsecase(
+        user_gateway=UserGateway(), order_gateway=OrderGateway()
+    )
     data = get_all_users_usecase()
 
     return jsonify({"data": data, "count": len(data)})
@@ -23,13 +25,10 @@ def add_user():
     address = request.json.get("address", None)
 
     response = AddUserUsecase(add_user_gateway=UserGateway()).add_user(
-        name=name,
-        phone_number=phone_number,
-        email=email,
-        address=address
+        name=name, phone_number=phone_number, email=email, address=address
     )
 
     if isinstance(response, dict) and "errors" in response:
         return jsonify(response)
-    
+
     return jsonify(response.id)

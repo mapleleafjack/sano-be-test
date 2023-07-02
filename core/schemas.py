@@ -8,6 +8,7 @@ class UserSchema(Schema):
     name = fields.Str()
     created_at = fields.DateTime()
 
+
 class DNAKitOrderSchema(Schema):
     id = fields.Str()
     sequencing_type = fields.Str()

@@ -1,4 +1,4 @@
-class GetAllUsersUsecase():
+class GetAllUsersUsecase:
     def __init__(self, user_gateway, order_gateway):
         self.user_gateway = user_gateway
         self.order_gateway = order_gateway

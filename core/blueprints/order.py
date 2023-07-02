@@ -1,4 +1,6 @@
-from core.gateways.email_notification_service_gateway import EmailNotificationServiceGateway
+from core.gateways.email_notification_service_gateway import (
+    EmailNotificationServiceGateway,
+)
 from core.gateways.order_gateway import OrderGateway
 from core.gateways.sms_notification_service_gateway import SMSNotificationServiceGateway
 from core.gateways.user_gateway import UserGateway
@@ -20,13 +22,11 @@ def create_order():
         order_gateway=OrderGateway(),
         user_gateway=UserGateway(),
         sms_notification_service_gateway=SMSNotificationServiceGateway(),
-        email_notification_service_gateway=EmailNotificationServiceGateway()
+        email_notification_service_gateway=EmailNotificationServiceGateway(),
     )
 
     response = add_order_usecase(
-        user_id=user_id,
-        sequencing_type=sequencing_type,
-        shipping_info=shipping_info
+        user_id=user_id, sequencing_type=sequencing_type, shipping_info=shipping_info
     )
 
     return response
