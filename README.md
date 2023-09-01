@@ -119,4 +119,58 @@ Thank you and we hope you have fun with the test!
 
 # Solution
 
-This part is for you! Please drop your loom video link in here as well as anything else you'd like to add/link to.
+[Link to Loom video](https://www.loom.com/share/13dca2c4be604f3a9c82145a0eeb54cb)
+
+- The project is written using Hexagonal architecture (separated into modular use cases/gateways) and TDD principles.
+- Each created python file has its test counterpart in the parallel "test" package, which mimics the main project structure.
+- There are two disabled tests - it's on purpose as they are e2e tests that checks the interaction between the application and the third party API. They are disabled so they don't send requests every time tests runs.
+- Although there is a small UI prototyped, the application works primarily through web API.
+- Tests are run by running "pytest".
+- Users can access the prototyped UI of the application by going to localhost:5000.
+- Users can also send POST/GET requests to the application itself through these commands:
+
+Adding a user
+```
+curl --location 'localhost:5000/users' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "phone_number": "123456789",
+    "email": "test.testington@gmail.com",
+    "address": {
+        "street": "123 Main Street"
+    },
+    "name" : "Jack"
+}'
+```
+
+Ordering a kit
+```
+curl --location 'localhost:5000/order' \
+--header 'Content-Type: application/json' \
+--data '{
+    "user_id": "cRzpaRTeP6o8SYkUFLsZ4p",
+    "sequencing_type": "dna-whole-exome-sequencing",
+    "shipping_info": {
+        "some": "info"
+    }
+}'
+```
+
+Potential improvements:
+- Use a .env file to store keys
+- There's some implementation information bleeding between gateways and usecase. In theory gateways should return entities/null while usecases should return dictionaries of data. In this particular case, the `get_by_id` and `get_all_users` from the UserGateway returns two different types.
+- The UI is not tested (I kept the focus on the backend side) and optimizable.
+
+About Task 3 in particular, using hexagonal architecture lets it naturally be tested in its various stages (data loading/usecase/blueprint).
+The tests in particular are:
+- Gateway level:
+  - `test_user_gateway_gets_user_by_id_from_database`
+  - `test_order_gateway_returns_order_data` 
+  - `test_order_gateway_returns_order_data (integration)`
+- UseCase level:
+  - `test_get_all_users_usecase_returns_list_of_users_with_order_information`
+- Blueprint level:
+  - `test_get_all_users_api_returns_list_of_users_with_order_information`
+
+
+About `test_order_gateway_returns_order_data` and `test_order_gateway_returns_order_data (integration)`, I wrote these particular tests as I couldn't mock the database library functions (as I'm not used to the particular library) - so I've created two tests, one that "circumvents" the problem by mocking a helper function in the gateway itself where the data loading is placed, while the other test file checks the integration itself with the database.
